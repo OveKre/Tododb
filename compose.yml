@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: my-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      # Optional: create a default database and user
+      MYSQL_DATABASE: Tododb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - my-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: my-phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: user
+      PMA_PASSWORD: password123
+      # If you created a user, you can connect with them too:
+      # PMA_USER: my_user
+      # PMA_PASSWORD: password123
+    ports:
+      - "8080:80"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+
+volumes:
+  mariadb_data:
